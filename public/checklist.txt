@@ -1,0 +1,8 @@
+ITEM: Background Check Form
+GUIDANCE: Please visit background.ourcompany.com, log in with your email, and fill out the 3-page form.
+
+ITEM: Direct Deposit Bank Details
+GUIDANCE: Send a voided check and the direct deposit authorization form to payroll@ourcompany.com.
+
+ITEM: IT Equipment Request
+GUIDANCE: Fill out the hardware request form at it.ourcompany.com to receive your monitor and accessories.

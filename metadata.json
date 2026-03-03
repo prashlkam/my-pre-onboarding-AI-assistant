@@ -1,0 +1,7 @@
+{
+  "name": "AI Pre-Onboarding Assistant",
+  "description": "An AI-driven state-machine application for candidate pre-onboarding, featuring identity verification, instruction acknowledgment, and checklist guidance.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
