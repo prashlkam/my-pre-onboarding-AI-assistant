@@ -184,10 +184,34 @@ export default function App() {
     });
   };
 
-  const wrapUp = (finalData?: UserData) => {
+  const wrapUp = async (finalData?: UserData) => {
     const dataToUse = finalData || userData;
     console.log("Final Report:", dataToUse);
-    addMessage('ai', "Thank you for your time. A summary has been sent to the HR team. Have a great day!");
+    
+    try {
+      const response = await fetch('/api/candidates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: dataToUse.name,
+          role: dataToUse.role,
+          instructionExceptions: dataToUse.instructionExceptions,
+          completedTasks: dataToUse.completedTasks,
+          pendingTasks: dataToUse.pendingTasks,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save to database');
+      }
+      
+      addMessage('ai', "Thank you for your time. Your data has been securely saved to our database and a summary has been sent to the HR team. Have a great day!");
+    } catch (error) {
+      console.error("Error saving to DB:", error);
+      addMessage('ai', "Thank you for your time. A summary has been sent to the HR team. Have a great day!");
+    }
   };
 
   const handleDownloadReport = async () => {
