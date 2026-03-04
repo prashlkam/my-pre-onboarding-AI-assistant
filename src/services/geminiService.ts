@@ -1,10 +1,24 @@
 /// <reference types="vite/client" />
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '' });
+let aiInstance: GoogleGenAI | null = null;
+
+function getAI() {
+  if (!aiInstance) {
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.error("Gemini API key is missing. Please set it in the AI Studio Secrets panel.");
+      // Return a dummy instance or throw an error. We'll throw to be caught by the try-catch blocks.
+      throw new Error("API key must be set when using the Gemini API.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+}
 
 export async function extractIdentity(message: string): Promise<{ name: string; role: string } | null> {
   try {
+    const ai = getAI();
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Extract the full name and the job role from the following message. If either is missing, return null for that field.\n\nMessage: "${message}"`,
@@ -37,6 +51,7 @@ export async function extractIdentity(message: string): Promise<{ name: string; 
 
 export async function evaluateInstructionResponse(message: string): Promise<{ status: 'ACCEPT' | 'OBJECTION'; reason?: string }> {
   try {
+    const ai = getAI();
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `You are an onboarding assistant. The user just replied: "${message}". Does this mean they accept the instruction, or do they have an objection/question?`,
@@ -74,6 +89,7 @@ export async function evaluateInstructionResponse(message: string): Promise<{ st
 
 export async function evaluateChecklistResponse(message: string): Promise<'COMPLETED' | 'PENDING'> {
   try {
+    const ai = getAI();
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `You are an onboarding assistant. The user just replied: "${message}" to a question about whether they have completed a checklist item. Have they completed it?`,

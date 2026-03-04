@@ -1,7 +1,8 @@
-import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 import { Message } from '../components/Chat';
 
 export async function generateWordDocument(userData: any, messages: Message[]) {
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import('docx');
+
   const doc = new Document({
     sections: [
       {
